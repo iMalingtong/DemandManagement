@@ -54,10 +54,11 @@
 ### ✅ 打开方式
 
 1. 克隆项目：
-   ```bash
-   git clone https://gitlab.com/your-namespace/CrayonPlan.git
+```bash
+   git clone https://github.com/iMalingtong/DemandManagement.git
+```
 
-   ## 📚 知识资源库
+## 📚 知识资源库
 ### 🚀 代码仓库
 🏗️ **地址：**[https://github.com/iMalingtong](https://github.com/iMalingtong)
 
