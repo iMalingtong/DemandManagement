@@ -1,0 +1,1328 @@
+<!-- 
+💫 关于我
+大家好，我是 [蜡笔不小新 Rm]  
+🎯 金融科技开发者 | 技术探索者  
+💡 专注于金融领域的软件开发与技术实践 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malt-CrayonPlan</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('images/wallhaven-6lkrow.png');
+            background-size: cover; /* 覆盖整个元素，可能会裁剪图片 */
+            background-position: center; /* 图片居中显示 */
+            background-repeat: no-repeat; /* 不重复图片 */
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 60px auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .template-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .template-selector label {
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+        }
+        
+        .template-selector select {
+            min-width: 200px;
+            flex: 1;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .btn-warning:hover {
+            background: #dba708;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+        }
+        
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        td {
+            padding: 15px 12px;
+        }
+        
+        .priority-high {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .priority-medium {
+            color: #fd7e14;
+            font-weight: 600;
+        }
+        
+        .priority-low {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        input[type="text"], input[type="date"], input[type="number"], select {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        input[type="text"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card h3 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-body label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .modal-body input, .modal-body select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        .action-btn-edit {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .action-btn-edit:hover {
+            background: #138496;
+        }
+        
+        .action-btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn-delete:hover {
+            background: #c82333;
+        }
+        
+        .save-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: #28a745;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            animation: slideInRight 0.3s ease;
+            z-index: 2000;
+        }
+        
+        .save-indicator.show {
+            display: block;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .template-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌈 CrayonPlan｜蜡笔计划 🧸</h1>
+            <p>🖍️ CrayonPlan 开发日程系统｜蜡笔不小新Rm 出品</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalCount">0</h3>
+                <p>总需求数</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="pendingCount">0</h3>
+                <p>待开发</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="progressCount">0</h3>
+                <p>开发中</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="doneCount">0</h3>
+                <p>已完成</p>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="template-selector">
+                <label>当前模板：</label>
+                <select id="templateSelect" onchange="switchTemplate()">
+                    <option value="default">默认模板</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="showNewTemplateModal()">
+                <span>➕</span> 新建模板
+            </button>
+            <button class="btn btn-warning" onclick="showRenameTemplateModal()">
+                <span>✏️</span> 重命名
+            </button>
+            <button class="btn btn-danger" onclick="deleteCurrentTemplate()">
+                <span>🗑️</span> 删除模板
+            </button>
+            <button class="btn btn-success" onclick="saveData()">
+                <span>💾</span> 保存
+            </button>
+            <button class="btn btn-secondary" id="editBtn" onclick="toggleEditMode()">
+                <span>✏️</span> 编辑
+            </button>
+            <button class="btn btn-primary" onclick="showAddRequirementModal()">
+                <span>➕</span> 新增需求
+            </button>
+            <button class="btn btn-primary" onclick="exportToExcel()">
+                <span>📥</span> 导出Excel
+            </button>
+            <button class="btn btn-primary" onclick="showGanttChart()">
+                <span>📊</span> 甘特图
+            </button>
+        </div>
+        
+        <div class="table-container">
+            <table id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">序号</th>
+                        <th style="width: 300px;">需求名称</th>
+                        <th style="width: 100px;">优先级</th>
+                        <th style="width: 120px;">预计工时(天)</th>
+                        <th style="width: 150px;">开始日期</th>
+                        <th style="width: 150px;">结束日期</th>
+                        <th style="width: 100px;">开发人员</th>
+                        <th style="width: 120px;">状态</th>
+                        <th style="width: 200px;">备注</th>
+                        <th style="width: 150px;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 新建/编辑需求模态框 -->
+    <div id="requirementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">新增需求</div>
+            <div class="modal-body">
+                <label>序号：<span style="color: red;">*</span></label>
+                <input type="number" id="reqId" placeholder="请输入序号">
+                
+                <label>需求名称：<span style="color: red;">*</span></label>
+                <input type="text" id="reqName" placeholder="请输入需求名称" maxlength="200">
+                
+                <label>优先级：</label>
+                <select id="reqPriority">
+                    <option value="high">高</option>
+                    <option value="medium" selected>中</option>
+                    <option value="low">低</option>
+                </select>
+                
+                <label>预计工时(天)：</label>
+                <input type="number" id="reqDays" placeholder="请输入预计工时" min="0">
+                
+                <label>开始日期：</label>
+                <input type="date" id="reqStartDate">
+                
+                <label>结束日期：</label>
+                <input type="date" id="reqEndDate">
+                
+                <label>开发人员：</label>
+                <input type="text" id="reqDeveloper" placeholder="请输入开发人员">
+                
+                <label>状态：</label>
+                <select id="reqStatus">
+                    <option value="pending" selected>待开发</option>
+                    <option value="progress">开发中</option>
+                    <option value="done">已完成</option>
+                </select>
+                
+                <label>备注：</label>
+                <input type="text" id="reqRemark" placeholder="请输入备注信息" maxlength="500">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">取消</button>
+                <button class="btn btn-success" onclick="saveRequirement()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新建模板模态框 -->
+    <div id="templateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">新建模板</div>
+            <div class="modal-body">
+                <label>模板名称：<span style="color: red;">*</span></label>
+                <input type="text" id="templateName" placeholder="请输入模板名称" maxlength="50">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeTemplateModal()">取消</button>
+                <button class="btn btn-success" onclick="createNewTemplate()">创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重命名模板模态框 -->
+    <div id="renameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">重命名模板</div>
+            <div class="modal-body">
+                <label>新模板名称：<span style="color: red;">*</span></label>
+                <input type="text" id="newTemplateName" placeholder="请输入新的模板名称" maxlength="50">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRenameModal()">取消</button>
+                <button class="btn btn-success" onclick="renameTemplate()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 保存提示 -->
+    <div id="saveIndicator" class="save-indicator">
+        ✓ 保存成功！
+    </div>
+
+    <!-- 甘特图模态框 -->
+    <div id="ganttModal" class="modal">
+        <div class="modal-content" style="max-width: 95%; max-height: 95vh;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>📊 项目甘特图</span>
+                <button class="btn btn-secondary" onclick="closeGanttModal()" style="padding: 8px 16px;">关闭</button>
+            </div>
+            <div class="modal-body" style="overflow-x: auto;">
+                <canvas id="ganttCanvas" style="border: 1px solid #e9ecef; background: white;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTemplate = 'default';
+        let editingIndex = -1;
+        let isEditMode = false; // 编辑模式标志
+        
+        // 默认需求数据
+        const defaultRequirements = [
+            { id: 1, name: '登录', priority: 'medium', days: 3, startDate: '2023-10-01', endDate: '2023-10-03', developer: '张三', status: 'pending'},
+            { id: 2, name: '退出', priority: 'low', days: 3, startDate: '2023-10-04', endDate: '2023-10-06', developer: '张三', status: 'pending'},
+            { id: 7, name: '订单模块-优化', priority: 'high', days: 31, startDate: '2023-10-07', endDate: '2023-11-06', developer: '张三', status: 'pending'}
+        ];
+
+        // 内存存储
+        const memoryStorage = {};
+        
+        function saveToMemory(key, data) {
+            memoryStorage[key] = JSON.stringify(data);
+        }
+        
+        function loadFromMemory(key) {
+            const data = memoryStorage[key];
+            return data ? JSON.parse(data) : null;
+        }
+
+        // 初始化数据
+        function initData() {
+            const savedData = loadFromMemory('scheduleData');
+            if (!savedData || !savedData.templates) {
+                const initialData = {
+                    templates: {
+                        'default': {
+                            name: '默认模板',
+                            requirements: [...defaultRequirements]
+                        }
+                    },
+                    currentTemplate: 'default'
+                };
+                saveToMemory('scheduleData', initialData);
+                return initialData;
+            }
+            return savedData;
+        }
+
+        // 加载数据
+        function loadData() {
+            const data = initData();
+            currentTemplate = data.currentTemplate || 'default';
+            
+            return data.templates[currentTemplate] ? data.templates[currentTemplate].requirements : [];
+        }
+        
+        // 更新模板选择器
+        function updateTemplateSelector() {
+            const data = loadFromMemory('scheduleData');
+            const select = document.getElementById('templateSelect');
+            select.innerHTML = '';
+            
+            for (let key in data.templates) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = data.templates[key].name;
+                if (key === currentTemplate) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
+
+        // 保存数据
+        function saveData() {
+            const data = loadFromMemory('scheduleData');
+            data.currentTemplate = currentTemplate;
+            saveToMemory('scheduleData', data);
+            
+            // 保存后切换到查看模式
+            if (isEditMode) {
+                isEditMode = false;
+                const editBtn = document.getElementById('editBtn');
+                editBtn.innerHTML = '<span>✏️</span> 编辑';
+                editBtn.classList.remove('btn-warning');
+                editBtn.classList.add('btn-secondary');
+                initTable();
+            }
+            
+            showSaveIndicator();
+        }
+
+        // 显示保存提示
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            indicator.classList.add('show');
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // 初始化表格
+        function initTable() {
+            const requirements = loadData();
+            updateTemplateSelector();
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            requirements.forEach((req, index) => {
+                const row = tbody.insertRow();
+                
+                if (isEditMode) {
+                    // 编辑模式：显示输入框
+                    row.innerHTML = `
+                        <td><input type="number" value="${req.id || ''}" onchange="updateData(${index}, 'id', this.value)"></td>
+                        <td><input type="text" value="${req.name || ''}" onchange="updateData(${index}, 'name', this.value)"></td>
+                        <td>
+                            <select onchange="updateData(${index}, 'priority', this.value)">
+                                <option value="high" ${req.priority === 'high' ? 'selected' : ''}>高</option>
+                                <option value="medium" ${req.priority === 'medium' ? 'selected' : ''}>中</option>
+                                <option value="low" ${req.priority === 'low' ? 'selected' : ''}>低</option>
+                            </select>
+                        </td>
+                        <td><input type="number" value="${req.days || ''}" onchange="updateData(${index}, 'days', this.value)" min="0"></td>
+                        <td><input type="date" value="${req.startDate || ''}" onchange="updateData(${index}, 'startDate', this.value)"></td>
+                        <td><input type="date" value="${req.endDate || ''}" onchange="updateData(${index}, 'endDate', this.value)"></td>
+                        <td><input type="text" value="${req.developer || ''}" placeholder="开发人员" onchange="updateData(${index}, 'developer', this.value)"></td>
+                        <td>
+                            <select onchange="updateData(${index}, 'status', this.value)">
+                                <option value="pending" ${!req.status || req.status === 'pending' ? 'selected' : ''}>待开发</option>
+                                <option value="progress" ${req.status === 'progress' ? 'selected' : ''}>开发中</option>
+                                <option value="done" ${req.status === 'done' ? 'selected' : ''}>已完成</option>
+                            </select>
+                        </td>
+                        <td><input type="text" value="${req.remark || ''}" placeholder="备注信息" onchange="updateData(${index}, 'remark', this.value)"></td>
+                        <td>
+                            <button class="action-btn action-btn-edit" onclick="editRequirement(${index})">编辑</button>
+                            <button class="action-btn action-btn-delete" onclick="deleteRequirement(${index})">删除</button>
+                        </td>
+                    `;
+                } else {
+                    // 查看模式：显示纯文本
+                    const priorityClass = `priority-${req.priority || 'medium'}`;
+                    const statusText = req.status ? getStatusText(req.status) : '待开发';
+                    
+                    row.innerHTML = `
+                        <td style="text-align: center;">${req.id || ''}</td>
+                        <td style="text-align: left;">${req.name || ''}</td>
+                        <td style="text-align: center;" class="${priorityClass}">${getPriorityText(req.priority)}</td>
+                        <td style="text-align: center;">${req.days || ''}</td>
+                        <td style="text-align: center;">${req.startDate || ''}</td>
+                        <td style="text-align: center;">${req.endDate || ''}</td>
+                        <td style="text-align: center;">${req.developer || ''}</td>
+                        <td style="text-align: center;">${statusText}</td>
+                        <td style="text-align: left;">${req.remark || ''}</td>
+                        <td>
+                            <button class="action-btn action-btn-edit" onclick="editRequirement(${index})">编辑</button>
+                            <button class="action-btn action-btn-delete" onclick="deleteRequirement(${index})">删除</button>
+                        </td>
+                    `;
+                }
+            });
+            
+            updateStats();
+        }
+        
+        // 切换编辑模式
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const editBtn = document.getElementById('editBtn');
+            
+            if (isEditMode) {
+                editBtn.innerHTML = '<span>👁️</span> 查看';
+                editBtn.classList.remove('btn-secondary');
+                editBtn.classList.add('btn-warning');
+            } else {
+                editBtn.innerHTML = '<span>✏️</span> 编辑';
+                editBtn.classList.remove('btn-warning');
+                editBtn.classList.add('btn-secondary');
+            }
+            
+            initTable();
+        }
+
+        // 更新数据
+        function updateData(index, field, value) {
+            const data = loadFromMemory('scheduleData');
+            if (field === 'id' || field === 'days') {
+                value = value ? parseInt(value) : '';
+            }
+            data.templates[currentTemplate].requirements[index][field] = value;
+            saveToMemory('scheduleData', data);
+            updateStats();
+        }
+
+        // 更新统计
+        function updateStats() {
+            const requirements = loadData();
+            const total = requirements.length;
+            const pending = requirements.filter(r => !r.status || r.status === 'pending').length;
+            const progress = requirements.filter(r => r.status === 'progress').length;
+            const done = requirements.filter(r => r.status === 'done').length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('progressCount').textContent = progress;
+            document.getElementById('doneCount').textContent = done;
+        }
+
+        // 显示新增需求模态框
+        function showAddRequirementModal() {
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = '新增需求';
+            document.getElementById('reqId').value = '';
+            document.getElementById('reqName').value = '';
+            document.getElementById('reqPriority').value = 'medium';
+            document.getElementById('reqDays').value = '';
+            document.getElementById('reqStartDate').value = '';
+            document.getElementById('reqEndDate').value = '';
+            document.getElementById('reqDeveloper').value = '';
+            document.getElementById('reqStatus').value = 'pending';
+            document.getElementById('reqRemark').value = '';
+            document.getElementById('requirementModal').classList.add('active');
+        }
+
+        // 编辑需求
+        function editRequirement(index) {
+            editingIndex = index;
+            const requirements = loadData();
+            const req = requirements[index];
+            
+            document.getElementById('modalTitle').textContent = '编辑需求';
+            document.getElementById('reqId').value = req.id || '';
+            document.getElementById('reqName').value = req.name || '';
+            document.getElementById('reqPriority').value = req.priority || 'medium';
+            document.getElementById('reqDays').value = req.days || '';
+            document.getElementById('reqStartDate').value = req.startDate || '';
+            document.getElementById('reqEndDate').value = req.endDate || '';
+            document.getElementById('reqDeveloper').value = req.developer || '';
+            document.getElementById('reqStatus').value = req.status || 'pending';
+            document.getElementById('reqRemark').value = req.remark || '';
+            document.getElementById('requirementModal').classList.add('active');
+        }
+
+        // 保存需求
+        function saveRequirement() {
+            const id = document.getElementById('reqId').value;
+            const name = document.getElementById('reqName').value.trim();
+            
+            if (!id) {
+                alert('请输入序号！');
+                return;
+            }
+            
+            if (!name) {
+                alert('请输入需求名称！');
+                return;
+            }
+            
+            const startDate = document.getElementById('reqStartDate').value;
+            const endDate = document.getElementById('reqEndDate').value;
+            
+            if (startDate && endDate && startDate > endDate) {
+                alert('开始日期不能晚于结束日期！');
+                return;
+            }
+            
+            const requirement = {
+                id: parseInt(id),
+                name: name,
+                priority: document.getElementById('reqPriority').value,
+                days: parseInt(document.getElementById('reqDays').value) || 0,
+                startDate: startDate,
+                endDate: endDate,
+                developer: document.getElementById('reqDeveloper').value.trim(),
+                status: document.getElementById('reqStatus').value,
+                remark: document.getElementById('reqRemark').value.trim()
+            };
+            
+            const data = loadFromMemory('scheduleData');
+            if (editingIndex === -1) {
+                data.templates[currentTemplate].requirements.push(requirement);
+            } else {
+                data.templates[currentTemplate].requirements[editingIndex] = requirement;
+            }
+            saveToMemory('scheduleData', data);
+            
+            closeModal();
+            initTable();
+            showSaveIndicator();
+        }
+
+        // 删除需求
+        function deleteRequirement(index) {
+            if (confirm('确定要删除这个需求吗？')) {
+                const data = loadFromMemory('scheduleData');
+                data.templates[currentTemplate].requirements.splice(index, 1);
+                saveToMemory('scheduleData', data);
+                initTable();
+                showSaveIndicator();
+            }
+        }
+
+        // 关闭需求模态框
+        function closeModal() {
+            document.getElementById('requirementModal').classList.remove('active');
+        }
+
+        // 显示新建模板模态框
+        function showNewTemplateModal() {
+            document.getElementById('templateName').value = '';
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        // 关闭模板模态框
+        function closeTemplateModal() {
+            document.getElementById('templateModal').classList.remove('active');
+        }
+
+        // 创建新模板
+        function createNewTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            if (!name) {
+                alert('请输入模板名称！');
+                return;
+            }
+            
+            const data = loadFromMemory('scheduleData');
+            const key = 'template_' + Date.now();
+            data.templates[key] = {
+                name: name,
+                requirements: []
+            };
+            currentTemplate = key;
+            data.currentTemplate = key;
+            saveToMemory('scheduleData', data);
+            
+            closeTemplateModal();
+            initTable();
+            showSaveIndicator();
+        }
+        
+        // 更新模板选择器
+        function updateTemplateSelector() {
+            const data = loadFromMemory('scheduleData');
+            if (!data || !data.templates) return;
+            
+            const select = document.getElementById('templateSelect');
+            select.innerHTML = '';
+            
+            for (let key in data.templates) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = data.templates[key].name;
+                if (key === currentTemplate) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            }
+        }
+
+        // 切换模板
+        function switchTemplate() {
+            const selectedTemplate = document.getElementById('templateSelect').value;
+            currentTemplate = selectedTemplate;
+            
+            // 更新数据中的当前模板
+            const data = loadFromMemory('scheduleData');
+            data.currentTemplate = currentTemplate;
+            saveToMemory('scheduleData', data);
+            
+            // 重新加载表格
+            initTable();
+        }
+
+        // 显示重命名模板模态框
+        function showRenameTemplateModal() {
+            if (currentTemplate === 'default') {
+                alert('默认模板不能重命名！');
+                return;
+            }
+            const data = loadFromMemory('scheduleData');
+            document.getElementById('newTemplateName').value = data.templates[currentTemplate].name;
+            document.getElementById('renameModal').classList.add('active');
+        }
+
+        // 关闭重命名模态框
+        function closeRenameModal() {
+            document.getElementById('renameModal').classList.remove('active');
+        }
+
+        // 重命名模板
+        function renameTemplate() {
+            const newName = document.getElementById('newTemplateName').value.trim();
+            if (!newName) {
+                alert('请输入新的模板名称！');
+                return;
+            }
+            
+            const data = loadFromMemory('scheduleData');
+            data.templates[currentTemplate].name = newName;
+            saveToMemory('scheduleData', data);
+            
+            closeRenameModal();
+            updateTemplateSelector();
+            showSaveIndicator();
+        }
+
+        // 删除当前模板
+        function deleteCurrentTemplate() {
+            if (currentTemplate === 'default') {
+                alert('默认模板不能删除！');
+                return;
+            }
+            
+            if (confirm('确定要删除当前模板吗？删除后将切换到默认模板。')) {
+                const data = loadFromMemory('scheduleData');
+                delete data.templates[currentTemplate];
+                currentTemplate = 'default';
+                data.currentTemplate = 'default';
+                saveToMemory('scheduleData', data);
+                
+                updateTemplateSelector();
+                initTable();
+                showSaveIndicator();
+            }
+        }
+
+        // 导出Excel（带样式）
+        function exportToExcel() {
+            const requirements = loadData();
+            const data = loadFromMemory('scheduleData');
+            const templateName = data.templates[currentTemplate].name;
+            const today = new Date().toISOString().split('T')[0];
+            
+            // 构建HTML表格
+            let html = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                            font-family: "Microsoft YaHei", Arial, sans-serif;
+                        }
+                        th {
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            background-color: #667eea;
+                            color: white;
+                            font-weight: bold;
+                            padding: 12px 8px;
+                            text-align: center;
+                            border: 1px solid #000;
+                            font-size: 12pt;
+                        }
+                        td {
+                            padding: 10px 8px;
+                            border: 1px solid #e9ecef;
+                            font-size: 11pt;
+                            vertical-align: middle;
+                        }
+                        tr:nth-child(even) {
+                            background-color: #f8f9fa;
+                        }
+                        .priority-high {
+                            color: #dc3545;
+                            font-weight: bold;
+                        }
+                        .priority-medium {
+                            color: #fd7e14;
+                            font-weight: bold;
+                        }
+                        .priority-low {
+                            color: #28a745;
+                            font-weight: bold;
+                        }
+                        .status-pending {
+                            background-color: #fff3cd;
+                            color: #856404;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+                        .status-progress {
+                            background-color: #cfe2ff;
+                            color: #084298;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+                        .status-done {
+                            background-color: #d1e7dd;
+                            color: #0f5132;
+                            font-weight: bold;
+                            text-align: center;
+                        }
+                        .col-id {
+                            text-align: center;
+                            width: 60px;
+                        }
+                        .col-name {
+                            text-align: left;
+                            width: 400px;
+                        }
+                        .col-priority {
+                            text-align: center;
+                            width: 80px;
+                        }
+                        .col-days {
+                            text-align: center;
+                            width: 100px;
+                        }
+                        .col-date {
+                            text-align: center;
+                            width: 120px;
+                        }
+                        .col-developer {
+                            text-align: center;
+                            width: 100px;
+                        }
+                        .col-status {
+                            text-align: center;
+                            width: 100px;
+                        }
+                        .col-remark {
+                            text-align: left;
+                            width: 250px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>需求名称</th>
+                                <th>优先级</th>
+                                <th>预计工时(天)</th>
+                                <th>开始日期</th>
+                                <th>结束日期</th>
+                                <th>开发人员</th>
+                                <th>状态</th>
+                                <th>备注</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            requirements.forEach(req => {
+                const priorityClass = `priority-${req.priority || 'medium'}`;
+                const statusValue = req.status || 'pending';
+                const statusClass = `status-${statusValue}`;
+                
+                html += `
+                    <tr>
+                        <td class="col-id">${req.id || ''}</td>
+                        <td class="col-name">${req.name || ''}</td>
+                        <td class="col-priority ${priorityClass}">${getPriorityText(req.priority)}</td>
+                        <td class="col-days">${req.days || ''}</td>
+                        <td class="col-date">${req.startDate || ''}</td>
+                        <td class="col-date">${req.endDate || ''}</td>
+                        <td class="col-developer">${req.developer || ''}</td>
+                        <td class="${statusClass}">${getStatusText(statusValue)}</td>
+                        <td class="col-remark">${req.remark || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+            
+            // 创建 Blob 并下载
+            const blob = new Blob(['\ufeff' + html], {
+                type: 'application/vnd.ms-excel;charset=utf-8'
+            });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `估值表系统开发日程_${templateName}_${today}.xls`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // 获取优先级中文
+        function getPriorityText(priority) {
+            const map = { high: '高', medium: '中', low: '低' };
+            return map[priority] || priority;
+        }
+
+        // 获取状态中文
+        function getStatusText(status) {
+            const map = { pending: '待开发', progress: '开发中', done: '已完成' };
+            return map[status] || status;
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            initTable();
+        };
+        
+        // 显示甘特图
+        function showGanttChart() {
+            const requirements = loadData();
+            
+            // 筛选出有开始和结束日期的需求
+            const validRequirements = requirements.filter(req => req.startDate && req.endDate);
+            
+            if (validRequirements.length === 0) {
+                alert('没有设置日期的需求！请先为需求设置开始日期和结束日期。');
+                return;
+            }
+            
+            // 显示模态框
+            document.getElementById('ganttModal').classList.add('active');
+            
+            // 延迟绘制，确保模态框已显示
+            setTimeout(() => {
+                drawGanttChart(validRequirements);
+            }, 100);
+        }
+        
+        // 关闭甘特图模态框
+        function closeGanttModal() {
+            document.getElementById('ganttModal').classList.remove('active');
+        }
+        
+        // 绘制甘特图
+        function drawGanttChart(requirements) {
+            const canvas = document.getElementById('ganttCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // 数据预处理与排序
+            requirements.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+            const minDate = new Date(Math.min(...requirements.map(r => new Date(r.startDate))));
+            const maxDate = new Date(Math.max(...requirements.map(r => new Date(r.endDate))));
+            const totalDays = Math.ceil((maxDate - minDate) / 86400000) + 1;
+
+            // 样式参数
+            const dayWidth = 26;
+            const rowHeight = 42;
+            const leftWidth = 230;
+            const headerHeight = 80;
+
+            canvas.width = leftWidth + totalDays * dayWidth + 100;
+            canvas.height = headerHeight + rowHeight * requirements.length + 60;
+
+            // 背景
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制标题
+            ctx.fillStyle = "#111827";
+            ctx.font = "bold 20px Microsoft YaHei";
+            ctx.textAlign = "center";
+            ctx.fillText("项目开发进度甘特图", canvas.width / 2, 40);
+            ctx.textAlign = "left";
+
+            // 时间网格线
+            ctx.strokeStyle = "#E5E7EB";
+            for (let i = 0; i <= totalDays; i++) {
+                const x = leftWidth + i * dayWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, headerHeight);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // 周标题（每10天作为一个周期）
+            ctx.fillStyle = "#374151";
+            ctx.font = "13px Microsoft YaHei";
+            const weekSpan = 10;
+            let weekIndex = 1;
+            for (let i = 0; i < totalDays; i += weekSpan) {
+                const x = leftWidth + i * dayWidth;
+                ctx.fillText(`Week ${weekIndex}-${weekIndex + 1}`, x + 10, 70);
+                weekIndex += 2;
+            }
+
+            // 每一行任务
+            requirements.forEach((r, i) => {
+                const y = headerHeight + i * rowHeight + 10;
+
+                // 绘制任务名
+                ctx.fillStyle = "#111827";
+                ctx.font = "14px Microsoft YaHei";
+                const name = `${r.id}. ${r.name}`;
+                ctx.fillText(name, 15, y + 20);
+
+                // 绘制条形
+                const startX = leftWidth + (new Date(r.startDate) - minDate) / 86400000 * dayWidth;
+                const endX = leftWidth + (new Date(r.endDate) - minDate) / 86400000 * dayWidth;
+                const barHeight = 18;
+
+                // 状态颜色（仿参考图）
+                const colors = {
+                    pending: "#F87171",   // 红橙
+                    progress: "#3B82F6",  // 蓝
+                    done: "#2563EB"       // 深蓝
+                };
+                const barColor = colors[r.status] || "#3B82F6";
+
+                // 条形背景（浅灰）
+                ctx.fillStyle = "#F3F4F6";
+                ctx.fillRect(leftWidth, y, totalDays * dayWidth, barHeight);
+
+                // 条形主色
+                ctx.fillStyle = barColor;
+                ctx.fillRect(startX, y, endX - startX, barHeight);
+
+                // 小阴影效果增强视觉层次
+                ctx.strokeStyle = "#E5E7EB";
+                ctx.strokeRect(startX, y, endX - startX, barHeight);
+            });
+
+            // 图例
+            const legendX = leftWidth;
+            const legendY = canvas.height - 30;
+            const legends = [
+                { color: "#F87171", text: "未开始" },
+                { color: "#3B82F6", text: "进行中" },
+                { color: "#2563EB", text: "已完成" }
+            ];
+            legends.forEach((l, i) => {
+                const x = legendX + i * 120;
+                ctx.fillStyle = l.color;
+                ctx.fillRect(x, legendY, 14, 14);
+                ctx.fillStyle = "#374151";
+                ctx.font = "12px Microsoft YaHei";
+                ctx.fillText(l.text, x + 20, legendY + 12);
+            });
+        }
+
+
+        // 格式化日期
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+    </script>
+</body>
+</html>
